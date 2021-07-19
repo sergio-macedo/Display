@@ -1,3 +1,0 @@
-curl -X POST https://api.stripe.com/v1/customers \
--u sk_test_51JEM9IE3nULJCHUVi9fkRqGi0OrCOt4hxKEhuqUQAiOPv8fwHdXIxFsZsXajmMJeDlJjM6I301gKnrjUzOqLhkVU00AXjGOkae \
--d description="Sergio Gabriel Rodrigues Macedo"
