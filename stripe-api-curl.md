@@ -1,4 +1,6 @@
-## Create Customer
+## Creating invoices
+
+### 01 - Create Customer
 ```
 curl -X POST https://api.stripe.com/v1/customers \
   -u $STRIPE_SK \
@@ -7,34 +9,18 @@ curl -X POST https://api.stripe.com/v1/customers \
   -d email="sergio.bobby88@gmail.com"
 ```
 
-## Create Product
-
-```
-curl -X POST https://api.stripe.com/v1/products \
-  -u $STRIPE_SK \
-  -d name="Orangen Saft"
-```
-
-## Create Price
-
-```
-curl -X POST https://api.stripe.com/v1/prices \
-  -u $STRIPE_SK \
-  -d unit_amount=525 \
-  -d currency=BRL \
-  -d product=PRODUCT_ID_HERE
-```
-
-## Create Invoice Items
+### 02 - Create Invoice Items
 
 ```
 curl -X POST https://api.stripe.com/v1/invoiceitems \
   -u $STRIPE_SK \
-  -d customer=cus_JsjyTE6RPcRh4c \
-  -d price=PRICE_ID_HERE
+  -d customer="cus_JsjyTE6RPcRh4c" \
+  -d currency=BRL \
+  -d amount=1050 \
+  -d description=Mensalidade
 ```
 
-## Create Invoice
+### 03 - Create Invoice
 
 ```
 curl -X POST https://api.stripe.com/v1/invoices \
