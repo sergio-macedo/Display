@@ -1,7 +1,8 @@
 'use strict';
-//TODO extract secret key to env variable.
-//const stripe = require('stripe')('sk_test_51JEM9IE3nULJCHUVi9fkRqGi0OrCOt4hxKEhuqUQAiOPv8fwHdXIxFsZsXajmMJeDlJjM6I301gKnrjUzOqLhkVU00AXjGOkae');
-const stripe = require('stripe')('sk_test_51HixbaC9V3j49QEeMYUuMp4OUsO343iyiM95lpZc6S9oiwoRXko5Q787bds7N8k67HvMM0SEZntzdlifRFp9Xj3Y00bYrbUpTu');
+
+const stripeSK = process.env.STRIPE_SK
+console.log(`stripe key: ${stripeSK}`)
+const stripe = require('stripe')(stripeSK);
 
 async function getCustomerId(email) {
   const customers = await stripe.customers.list({
@@ -21,7 +22,7 @@ async function getCustomerId(email) {
 
 module.exports.endpoint = async (event, context, callback) => {
   const body = JSON.parse(event.body);
-
+  
   // TODO add validation to all fields (email, value, desc)
 
   console.log(`customer's email: ${body.email}`);
@@ -52,7 +53,7 @@ module.exports.endpoint = async (event, context, callback) => {
 
 
   //TODO send proper response. 
-  const response = {    
+ const response = {    
     statusCode: 200,
     body: JSON.stringify(event.body),
   };
