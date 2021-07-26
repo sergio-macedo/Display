@@ -4,22 +4,6 @@ const stripeSK = process.env.STRIPE_SK
 console.log(`stripe key: ${stripeSK}`)
 const stripe = require('stripe')(stripeSK);
 
-async function getCustomerId(email) {
-  const customers = await stripe.customers.list({
-    email: email,
-  });
-
-  if (customers.data.length > 0) {
-    const existingCustomer = customers.data[0];
-    console.log(`Existing customer ${JSON.stringify(existingCustomer)}`);
-    return existingCustomer.id;
-  }
-
-  const createdCustomer = await stripe.customers.create({ email: email });
-  console.log(`Created customer ${JSON.stringify(createdCustomer)}`);
-  return createdCustomer.id;
-}
-
 module.exports.endpoint = async (event, context, callback) => {
   const body = JSON.parse(event.body);
   
@@ -60,3 +44,19 @@ module.exports.endpoint = async (event, context, callback) => {
 
   callback(null, response);
 };
+
+async function getCustomerId(email) {
+  const customers = await stripe.customers.list({
+    email: email,
+  });
+
+  if (customers.data.length > 0) {
+    const existingCustomer = customers.data[0];
+    console.log(`Existing customer ${JSON.stringify(existingCustomer)}`);
+    return existingCustomer.id;
+  }
+
+  const createdCustomer = await stripe.customers.create({ email: email });
+  console.log(`Created customer ${JSON.stringify(createdCustomer)}`);
+  return createdCustomer.id;
+}
