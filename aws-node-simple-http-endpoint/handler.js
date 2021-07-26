@@ -18,10 +18,8 @@ module.exports.endpoint = async (event, context) => {
   console.log(`customer's email: ${body.email}`);
   const customerId = await getCustomerId(body.email);
   console.log(`Moving forward with customer id: ${customerId}`);
-
-  // TODO create invoice for customer. Use value and description. I think we should
-  //  add the cc email, probably Paulo's email.
-  const invoiceItem = await stripe.invoiceItems.create({ //TODO remove invoiceItem variable, we don't need it.
+  
+  const invoiceItem = await stripe.invoiceItems.create({
     customer: customerId,
     currency: 'BRL',
     amount: body.amount,
@@ -38,14 +36,9 @@ module.exports.endpoint = async (event, context) => {
 
   await stripe.invoices.sendInvoice(invoice.id);
   console.log(`Invoice ${invoice.id} sent`)
-
-
-
-
-  //TODO send proper response. 
+  
   return {
-    statusCode: 200,
-    body: event.body,
+    statusCode: 204
   };
 };
 
