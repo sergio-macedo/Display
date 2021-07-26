@@ -6,5 +6,8 @@
   "license": "MIT",
   "devDependencies": {
     "serverless-offline": "^7.0.0"
+  },
+  "dependencies": {
+    "stripe": "^8.165.0"
   }
 }
