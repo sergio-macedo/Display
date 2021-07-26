@@ -4,10 +4,16 @@ const stripeSK = process.env.STRIPE_SK
 console.log(`stripe key: ${stripeSK}`)
 const stripe = require('stripe')(stripeSK);
 
-module.exports.endpoint = async (event, context, callback) => {
+module.exports.endpoint = async (event, context) => {
   const body = JSON.parse(event.body);
   
   // TODO add validation to all fields (email, value, desc)
+  if (!body.email || !body.amount || !body.desc) {
+    return {
+      statusCode: 400,
+      body: "The sky is falling :(",
+    };
+  }
 
   console.log(`customer's email: ${body.email}`);
   const customerId = await getCustomerId(body.email);
@@ -37,12 +43,10 @@ module.exports.endpoint = async (event, context, callback) => {
 
 
   //TODO send proper response. 
- const response = {    
+  return {
     statusCode: 200,
-    body: JSON.stringify(event.body),
+    body: event.body,
   };
-
-  callback(null, response);
 };
 
 async function getCustomerId(email) {
