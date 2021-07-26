@@ -1,5 +1,7 @@
 'use strict';
-const stripe = require('stripe')('sk_test_51JEM9IE3nULJCHUVi9fkRqGi0OrCOt4hxKEhuqUQAiOPv8fwHdXIxFsZsXajmMJeDlJjM6I301gKnrjUzOqLhkVU00AXjGOkae');
+//TODO extract secret key to env variable.
+//const stripe = require('stripe')('sk_test_51JEM9IE3nULJCHUVi9fkRqGi0OrCOt4hxKEhuqUQAiOPv8fwHdXIxFsZsXajmMJeDlJjM6I301gKnrjUzOqLhkVU00AXjGOkae');
+const stripe = require('stripe')('sk_test_51HixbaC9V3j49QEeMYUuMp4OUsO343iyiM95lpZc6S9oiwoRXko5Q787bds7N8k67HvMM0SEZntzdlifRFp9Xj3Y00bYrbUpTu');
 
 async function getCustomerId(email) {
   const customers = await stripe.customers.list({
@@ -22,15 +24,34 @@ module.exports.endpoint = async (event, context, callback) => {
 
   // TODO add validation to all fields (email, value, desc)
 
-  const email = body.email;
-  console.log(`customer's email: ${email}`);
-  const customerId = await getCustomerId(email);
+  console.log(`customer's email: ${body.email}`);
+  const customerId = await getCustomerId(body.email);
   console.log(`Moving forward with customer id: ${customerId}`);
 
   // TODO create invoice for customer. Use value and description. I think we should
   //  add the cc email, probably Paulo's email.
+  const invoiceItem = await stripe.invoiceItems.create({ //TODO remove invoiceItem variable, we don't need it.
+    customer: customerId,
+    currency: 'BRL',
+    amount: body.amount,
+    description: body.desc
+  });
+  console.log(`invoiceItem created: ${JSON.stringify(invoiceItem)}`)
+
+  const invoice = await stripe.invoices.create({
+    customer: customerId,
+    collection_method: 'send_invoice',
+    days_until_due: 5
+  });
+  console.log(`invoice created: ${JSON.stringify(invoice)}`)  
+
+  await stripe.invoices.sendInvoice(invoice.id);
+  console.log(`Invoice ${invoice.id} sent`)
 
 
+
+
+  //TODO send proper response. 
   const response = {    
     statusCode: 200,
     body: JSON.stringify(event.body),
